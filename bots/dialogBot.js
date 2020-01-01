@@ -61,6 +61,8 @@ class DialogBot extends ActivityHandler {
         const promises = turnContext.activity.attachments.map(this.downloadAttachmentAndWrite);
         const successfulSaves = await Promise.all(promises);
 
+        await turnContext.sendActivity(turnContext.activity.attachments[0].contentType);
+
         // Replies back to the user with information about where the attachment is stored on the bot's server,
         // and what the name of the saved file is.
         async function replyForReceivedAttachments(poem_content) {
@@ -107,7 +109,7 @@ class DialogBot extends ActivityHandler {
             const xiaobin_res = await axios.post("https://poem.msxiaobing.com/api/upload", {
                 image: img_base64,
                 userid: "e5cd78f0-4808-4c43-9b54-4f468e6aba16",
-                text: "恐龍",
+                text: "",
                 guid: "353c23e7-0442-4c78-8acd-87f4ec7469cc"
             });
 
