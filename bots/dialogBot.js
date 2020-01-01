@@ -32,12 +32,9 @@ class DialogBot extends ActivityHandler {
 
             // Run the Dialog with the new message Activity.
             // await this.dialog.run(context, this.dialogState);
-            if (context.activity.attachments && context.activity.attachments.length > 0) {
+            if (typeof context.activity.attachments != 'undefined' && context.activity.attachments && context.activity.attachments.length > 0) {
                 // The user sent an attachment and the bot should handle the incoming attachment.
                 await this.handleIncomingAttachment(context);
-            } else {
-                //Debug
-                await this.sendActivity('沒辦法判斷Attachment');
             }
 
             // By calling next() you ensure that the next BotHandler is run.
