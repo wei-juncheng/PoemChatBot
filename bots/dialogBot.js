@@ -10,22 +10,10 @@ var chineseConv = require('chinese-conv');
 
 
 class DialogBot extends ActivityHandler {
-    /**
-     *
-     * @param {ConversationState} conversationState
-     * @param {UserState} userState
-     * @param {Dialog} dialog
-     */
-    constructor(conversationState, userState, dialog) {
-        super();
-        if (!conversationState) throw new Error('[DialogBot]: Missing parameter. conversationState is required');
-        if (!userState) throw new Error('[DialogBot]: Missing parameter. userState is required');
-        if (!dialog) throw new Error('[DialogBot]: Missing parameter. dialog is required');
 
-        this.conversationState = conversationState;
-        this.userState = userState;
-        this.dialog = dialog;
-        this.dialogState = this.conversationState.createProperty('DialogState');
+    constructor() {
+        super();
+
 
         this.onMessage(async(context, next) => {
             console.log('Running dialog with Message Activity.');
@@ -34,21 +22,17 @@ class DialogBot extends ActivityHandler {
             // await this.dialog.run(context, this.dialogState);
             if (typeof context.activity.attachments != 'undefined' && context.activity.attachments && context.activity.attachments.length > 0) {
                 // The user sent an attachment and the bot should handle the incoming attachment.
+                await context.sendActivity('讓我想一想');
                 await this.handleIncomingAttachment(context);
+            } else {
+                await context.sendActivity(context.activity.text);
             }
 
             // By calling next() you ensure that the next BotHandler is run.
             await next();
         });
 
-        this.onDialog(async(context, next) => {
-            // Save any state changes. The load happened during the execution of the Dialog.
-            await this.conversationState.saveChanges(context, false);
-            await this.userState.saveChanges(context, false);
 
-            // By calling next() you ensure that the next BotHandler is run.
-            await next();
-        });
     }
 
     /**
@@ -87,21 +71,13 @@ class DialogBot extends ActivityHandler {
         // Retrieve the attachment via the attachment's contentUrl.
         const url = attachment.contentUrl;
 
-
         try {
             // arraybuffer is necessary for images
             const response = await axios.get(url, { responseType: 'arraybuffer' });
-            // If user uploads JSON file, this prevents it from being written as "{"type":"Buffer","data":[123,13,10,32,32,34,108..."
-            if (response.headers['content-type'] === 'application/json') {
-                response.data = JSON.parse(response.data, (key, value) => {
-                    return value && value.type === 'Buffer' ? Buffer.from(value.data) : value;
-                });
-            }
 
             const img_base64 = await new Buffer.from(response.data, 'binary').toString('base64');
+
             //傳送至小冰
-
-
             const xiaobin_res = await axios.post("https://poem.msxiaobing.com/api/upload", {
                 image: img_base64,
                 userid: "e5cd78f0-4808-4c43-9b54-4f468e6aba16",
@@ -116,7 +92,6 @@ class DialogBot extends ActivityHandler {
             };
 
         } catch (error) {
-            // console.log("aa");
             console.error(error);
             return undefined;
         }
