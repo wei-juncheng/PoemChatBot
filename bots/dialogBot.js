@@ -2,10 +2,10 @@
 // Licensed under the MIT License.
 
 const { ActivityHandler } = require('botbuilder');
-const path = require('path');
+// const path = require('path');
 const axios = require('axios');
-const fs = require('fs');
-var request = require('request');
+// const fs = require('fs');
+// var request = require('request');
 var chineseConv = require('chinese-conv');
 
 
@@ -89,8 +89,6 @@ class DialogBot extends ActivityHandler {
         // Retrieve the attachment via the attachment's contentUrl.
         const url = attachment.contentUrl;
 
-        // Local file path for the bot to save the attachment.
-        const localFileName = path.join(__dirname, attachment.name);
 
         try {
             // arraybuffer is necessary for images
