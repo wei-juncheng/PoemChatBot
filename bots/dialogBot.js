@@ -61,8 +61,6 @@ class DialogBot extends ActivityHandler {
         const promises = turnContext.activity.attachments.map(this.downloadAttachmentAndWrite);
         const successfulSaves = await Promise.all(promises);
 
-        await turnContext.sendActivity(turnContext.activity.attachments[0].contentType);
-
         // Replies back to the user with information about where the attachment is stored on the bot's server,
         // and what the name of the saved file is.
         async function replyForReceivedAttachments(poem_content) {
@@ -111,10 +109,10 @@ class DialogBot extends ActivityHandler {
                 guid: "353c23e7-0442-4c78-8acd-87f4ec7469cc"
             });
 
-            const traditional_poem = await chineseConv.tify(xiaobin_res.data.OpenPoems[1].PoemContent);
+            var traditional_poem = await chineseConv.tify(xiaobin_res.data.OpenPoems[0].PoemContent);
             console.log(traditional_poem);
             return {
-                content: traditional_poem
+                content: traditional_poem.split('\n').join('\n\n')
             };
 
         } catch (error) {
