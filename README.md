@@ -3,6 +3,8 @@
 
 - This bot has been created using [Bot Framework](https://dev.botframework.com), you can upload an image then this bot will write a poem for you.
 - This bot using [小冰寫詩](https://poem.msxiaobing.com/) to write poem.
+- You can talk to this Bot via Line. (Scan following QRcode):
+![](https://i.imgur.com/dDAMtwO.png)
 
 
 ## Prerequisites
